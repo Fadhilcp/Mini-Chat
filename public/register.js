@@ -93,7 +93,7 @@ function validate(){
             const email = inputs.email.value
             const password = inputs.password.value
             
-            const response = await fetch('/user/register',{
+            const response = await fetch('/register',{
                 method:'POST',
                 headers: {
                     'Content-Type':'application/json'

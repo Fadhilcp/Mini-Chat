@@ -13,7 +13,6 @@ import db from './config/db.js'
 import env from 'dotenv'
 env.config()
 
-import chatRoute from './routers/chatRoute.js'
 import userRoute from './routers/userRoute.js'
 
 // ====================================================
@@ -28,23 +27,24 @@ app.set('view engine','ejs')
 app.set('views',path.join(__dirname,'views'))
 app.use(express.static(path.join(__dirname,'public')))
 
-app.use(nocache())
-app.use(express.json())
+
 
 app.use(session({
     secret:process.env.SESSION_SECRET,
     resave:false,
     saveUninitialized:true,
     cookie:{
-        secure:true,
+        secure:false,
         httpOnly:true,
         maxAge: 72*60*60*1000
     }
 }))
 
-app.use('/user',userRoute)
-app.use('/',chatRoute)
+app.use(nocache())
+app.use(express.json())
+app.use(express.urlencoded({extended:true}))
 
+app.use('/',userRoute)
 
 app.listen(process.env.PORT,() => {
     console.log('server running in http://localhost:3000')

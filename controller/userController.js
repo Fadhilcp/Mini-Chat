@@ -3,19 +3,52 @@ import mongoose from "mongoose"
 import User from './../model/userSchema.js'
 import bcrypt from 'bcrypt'
 
-const login = (req,res) => {
+const loginPage = (req,res) => {
     try {
         
-        res.render('login')
+        if(!req.session.user){
+           return res.render('login')
+        }else{
+            res.redirect('/')
+        }
     } catch (error) {
         console.error('login page render Error:',error)
+    }
+}
+
+const login = async (req,res) => {
+    try {
+        const {email,password} = req.body
+
+        const user = await User.findOne({email})
+
+        if(!user){
+            return res.json({status:false,message:`User isn't existing`})
+        }
+
+        const passwordMatch = await bcrypt.compare(password,user.password)
+
+        if(!passwordMatch){
+            return res.json({status:false,password:true,message:'Password is not valid!'})
+        }
+
+        req.session.user = user._id
+
+        res.json({status:true})
+
+    } catch (error) {
+        console.log('Login error:',error)
     }
 }
 
 const registerPage = (req,res) => {
     try {
         
-        res.render('register')
+        if(!req.session.user){
+            res.render('register')
+        }else{
+            res.redirect('/')
+        }
     } catch (error) {
         console.error('register page render Error:',error)
     }
@@ -34,7 +67,9 @@ const register = async(req,res) => {
 
         const hashPassword = await bcrypt.hash(password,10)
 
-         await User.insertOne({name,email,password:hashPassword})
+         const newUser = await User.insertOne({name,email,password:hashPassword})
+
+         req.session.user = newUser.id
 
          return res.json({status:true,message:'Registration successful'})
         
@@ -45,6 +80,7 @@ const register = async(req,res) => {
 }
 
 export default {
+    loginPage,
     login,
     registerPage,
     register
