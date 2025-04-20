@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="container-fluid h-100">
+        <div class="row h-100">
+            <!-- Users list sidebar -->
+            <div class="col-md-4 col-lg-3 users-sidebar p-0">
+                <div class="user-profile d-flex align-items-center p-3 bg-light">
+                    <div class="profile-img">
+                        <img src="/api/placeholder/40/40" alt="Your profile" class="rounded-circle">
+                    </div>
+                    <div class="profile-name ms-2 flex-grow-1">My Profile</div>
+                    <div class="profile-icons">
+                        <span class="icon btn btn-sm"><i class="fas fa-cog"></i></span>
+                        <span class="icon btn btn-sm"><i class="fas fa-plus"></i></span>
+                        <span class="icon btn btn-sm"><i class="fas fa-reply"></i></span>
+                    </div>
+                </div>
+                
+                <div class="search-container p-2">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0">
+                            <i class="fas fa-search text-muted"></i>
+                        </span>
+                        <input type="text" class="form-control border-start-0" id="search-users" placeholder="Search or start a new chat">
+                    </div>
+                </div>
+                
+                <div class="users-list overflow-auto" id="users-list">
+                    <!-- User entries will be dynamically populated -->
+                </div>
+            </div>
+            
+            <!-- Chat area -->
+            <div class="col-md-8 col-lg-9 chat-area p-0 d-flex flex-column">
+                <div class="chat-header d-flex align-items-center p-3 bg-light">
+                    <div class="chat-user-info d-flex align-items-center">
+                        <div class="chat-user-img">
+                            <img src="/api/placeholder/40/40" alt="User profile" class="rounded-circle">
+                        </div>
+                        <div class="chat-user-name ms-2" id="current-chat-name">Select a chat</div>
+                    </div>
+                    <div class="chat-actions ms-auto">
+                        <span class="icon btn btn-sm"><i class="fas fa-search"></i></span>
+                        <span class="icon btn btn-sm"><i class="fas fa-ellipsis-v"></i></span>
+                    </div>
+                </div>
+                
+                <div class="messages-container flex-grow-1 overflow-auto p-3" id="messages-container">
+                    <!-- Messages will be dynamically populated -->
+                    <div class="welcome-message text-center my-5">
+                        <h3>Welcome to your Chat App</h3>
+                        <p class="text-muted">Select a user from the sidebar to start chatting</p>
+                    </div>
+                </div>
+                
+                <div class="message-input-area p-3 bg-light">
+                    <div class="input-group">
+                        <button class="btn btn-outline-secondary" type="button">
+                            <i class="far fa-smile"></i>
+                        </button>
+                        <button class="btn btn-outline-secondary" type="button">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                        <input type="text" class="form-control" id="message-text" placeholder="Type a message">
+                        <button class="btn btn-primary" id="send-button">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="/script.js"></script>
+</body>
+</html>
