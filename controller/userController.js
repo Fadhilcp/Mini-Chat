@@ -1,5 +1,5 @@
 
-import mongoose from "mongoose"
+
 import User from './../model/userSchema.js'
 import bcrypt from 'bcrypt'
 
@@ -63,6 +63,12 @@ const register = async(req,res) => {
 
         if(userExists){
             return res.json({status:false,message:'User already exist'})
+        }
+
+        const exsitingName = await User.findOne({name})
+
+        if(exsitingName){
+            return res.json({status:false,name:true,message:'Name is already exist,try another one'})
         }
 
         const hashPassword = await bcrypt.hash(password,10)

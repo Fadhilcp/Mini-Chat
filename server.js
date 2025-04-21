@@ -48,4 +48,4 @@ app.use('/',userRoute)
 
 app.listen(process.env.PORT,() => {
     console.log('server running in http://localhost:3000')
-})
+}) 

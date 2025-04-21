@@ -118,12 +118,17 @@ function validate(){
                   window.location.href = '/'
 
             }else{
-                Swal.fire({
-                    icon: 'info',
-                    title: result.message,
-                    showConfirmButton: false,
-                    timer: 1500
-                  })
+                if(result.name){
+                    messages.name.textContent = result.message
+                }else{
+
+                    Swal.fire({
+                        icon: 'info',
+                        title: result.message,
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                }
             }
         }
     })
