@@ -4,8 +4,11 @@ import Message from './../model/messageSchema.js'
 const home = async (req,res) => {
     try {
 
+        const user = req.session.user
         
-        res.render('index')
+        res.render('index',{
+            user
+        })
     } catch (error) { 
         res.redirect('/login')
     }
@@ -38,8 +41,6 @@ const recent = async (req,res) => {
 
         if(!user) return res.status(500).json({message:'User not found'})
 
-            console.log(user.chatsWith)
-
         res.json(user.chatsWith)
         
     } catch (error) {
@@ -70,9 +71,42 @@ const message = async (req,res) => {
     }
 }
 
+const sendMessage = async (req,res) => {
+    try {
+
+        const io = req.app.get('io')
+
+        const fromUserId = req.session.user
+        const toUserId = req.body.to
+        const content = req.body.text
+    
+        if (!fromUserId || !toUserId || !content) {
+          return res.status(400).json({ status: false, message: 'Missing required fields' })
+        }
+
+        const message = new Message({
+            sender:fromUserId,
+            receiver:toUserId,
+            content
+        })
+
+        await message.save()
+
+        await User.findByIdAndUpdate(fromUserId, { $addToSet: { chatsWith: toUserId } })
+        await User.findByIdAndUpdate(toUserId, { $addToSet: { chatsWith: fromUserId } })
+
+        res.json({ status: true, message: 'Message sent' })
+        
+    } catch (error) {
+        console.error('Send message error:', error)
+        res.status(500).json({ status: false, message: 'Failed to send message' })
+    }
+}
+
 export default { 
     home,
     search,
     recent,
-    message
+    message,
+    sendMessage
 }

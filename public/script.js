@@ -2,6 +2,32 @@
 
 let currentChatId = null;
 
+var socket = io()
+
+var CURRENT_USER_ID = document.getElementById('currentUserId').value
+
+
+
+socket.on('chat message', (msg) => {
+    const {sender, content, timestamp } = msg
+
+    console.log(msg)
+
+    const container = document.getElementById('messages-container');
+    const div = document.createElement('div');
+    div.className = `message mb-2 ${sender === CURRENT_USER_ID ? 'text-end' : 'text-start'}`;
+
+    div.innerHTML = `
+        <div class="d-inline-block p-2 rounded ${sender === CURRENT_USER_ID ? 'bg-primary text-white' : 'bg-light'}">
+            ${content}
+        </div>
+        <div class="text-muted small">${new Date(timestamp).toLocaleTimeString()}</div>
+    `;
+
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+})
+
 // // Fetch all users
 async function fetchUsers() {
     const res = await fetch('/recent');
@@ -23,7 +49,7 @@ function populateUsersList(users) {
 
     users.forEach(user => {
         const div = document.createElement('div');
-        div.className = `user-item p-2 border-bottom ${user._id === currentChatId ? 'bg-light' : ''}`;
+        div.className = `user-item p-2 border-bottom ${user._id === CURRENT_USER_ID ? 'bg-light' : ''}`;
         div.dataset.userId = user._id;
         div.textContent = user.name;
 
@@ -39,12 +65,12 @@ function showMessages(messages) {
 
     messages.forEach(msg => {
         const div = document.createElement('div');
-        div.className = `message mb-2 ${msg.sender === 'me' ? 'text-end' : 'text-start'}`;
+        div.className = `message mb-2 ${msg.sender === CURRENT_USER_ID ? 'text-end' : 'text-start'}`;
         div.innerHTML = `
-            <div class="d-inline-block p-2 rounded ${msg.sender === 'me' ? 'bg-primary text-white' : 'bg-light'}">
-                ${msg.text}
+            <div class="d-inline-block p-2 rounded ${msg.sender === CURRENT_USER_ID ? 'bg-primary text-white' : 'bg-light'}">
+                ${msg.content}
             </div>
-            <div class="text-muted small">${new Date(msg.createdAt).toLocaleTimeString()}</div>
+            <div class="text-muted small">${new Date(msg.timestamp).toLocaleTimeString()}</div>
         `;
         container.appendChild(div);
     });
@@ -64,6 +90,10 @@ async function sendMessage() {
     const input = document.getElementById('message-text');
     const text = input.value.trim();
     if (!text || !currentChatId) return;
+
+
+        socket.emit('chat message',text) 
+        console.log('lolo')
 
     await fetch('/messages', {
         method: 'POST',
@@ -89,7 +119,7 @@ function setupSearch() {
         const term = searchInput.value.trim();
 
         if (term === "") {
-            // Show default full user list
+
             await fetchUsers();
             return;
         }

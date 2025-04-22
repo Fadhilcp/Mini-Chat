@@ -15,7 +15,8 @@ router.post('/register',userController.register)
 
 router.get('/search',userAuth,chatController.search)
 router.get('/recent',userAuth,chatController.recent)
-router.get('/message/:userId',userAuth,chatController.message)
+router.get('/messages/:userId',userAuth,chatController.message)
+router.post('/messages',userAuth,chatController.sendMessage)
 
 
 export default router

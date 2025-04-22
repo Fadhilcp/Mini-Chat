@@ -15,7 +15,17 @@ env.config()
 
 import userRoute from './routers/userRoute.js'
 
-// ====================================================
+import {Server} from 'socket.io'
+import http from 'http'
+
+const server = http.createServer(app)
+const io = new Server(server)
+
+import socket from './config/socket.js'
+
+socket(io)
+
+// ========================== ==========================
 // Manually setting path module js
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -25,6 +35,9 @@ db()
 
 app.set('view engine','ejs')
 app.set('views',path.join(__dirname,'views'))
+
+
+
 app.use(express.static(path.join(__dirname,'public')))
 
 
@@ -44,8 +57,9 @@ app.use(nocache())
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 
+
 app.use('/',userRoute)
 
-app.listen(process.env.PORT,() => {
+server.listen(process.env.PORT,() => {
     console.log('server running in http://localhost:3000')
 }) 
